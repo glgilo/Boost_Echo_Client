@@ -4,15 +4,22 @@
 
 #include "socketReader.h"
 #include <string>
+#include <iostream>
 #include <protocol.h>
 #include <connectionHandler.h>
 
 using namespace std;
 void socketReader::readFromSocket() {
-    string line;
     while(1){
+        string line;
         if (connectionHandler_.getLine(line)) {
-            protocol_.proccesServerLine(line);
+            fromFrame.clear();
+            stringstream start(line);
+            string tempWord;
+            while (getline(start, tempWord, '\n')) {
+                fromFrame.push_back(tempWord);
+            }
+            protocol_.proccesServerLine(fromFrame);
         }
     }
 

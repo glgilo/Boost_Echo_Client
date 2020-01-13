@@ -26,7 +26,7 @@ int clientDataBase::getReceiptCount() const {
     return receiptCount;
 }
 
-const unordered_map<int, string> &clientDataBase::getSubscribedTo() const {
+ unordered_map<string, int> &clientDataBase::getSubscribedTo()  {
     return subscribedTo;
 }
 
@@ -58,4 +58,12 @@ void clientDataBase::removeFromMyBooks(string book, string topic) {
             myBooks.at(topic).erase( myBooks.at(topic).begin() +i);
     }
 
+}
+
+ unordered_map<string,int> &clientDataBase::getWantToSubscribe()  {
+    return wantToSubscribe;
+}
+
+ vector<string> &clientDataBase::getWishToBorrow()  {
+    return wishToBorrow;
 }

@@ -16,13 +16,14 @@ void protocol::process(vector<string> frameToBuild) {
                         "id:" + to_string(clientDB.getSubCount()) + "\n "
                         "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("SUBSCRIBE",frameToBuild.at(1))));
+        clientDB.getWantToSubscribe().insert(make_pair(frameToBuild.at(1),clientDB.getSubCount()));
         clientDB.increaseSubId();
         clientDB.increaseReceipt();
 
     }
     else if(command == "exit"){
         toSend = "UNSUBSCRIBE \n"
-                        "id:" + to_string(clientDB.getSubCount()) + "\n "
+                        "id:" + to_string(clientDB.getSubscribedTo().at(frameToBuild.at(1))) + "\n "
                         "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("UNSUBSCRIBE",frameToBuild.at(1))));
         clientDB.increaseReceipt();
@@ -59,6 +60,103 @@ void protocol::process(vector<string> frameToBuild) {
     connectionHandler_.sendLine(toSend);
 }
 
-void protocol::proccesServerLine(string line) {
+void protocol::proccesServerLine(vector<string> fromFrame) {
+    string type = fromFrame.at(0);
+//    string toSend;
+    if(type == "RECEIPT"){
+        string id = splitAndGetSecondWord(fromFrame.at(1),':');
+        pair<string,string> handleProperly = clientDB.getRequestWithReceipt().at(stoi(id));
+        if(handleProperly.first == "SUBSCRIBE"){
+            clientDB.getSubscribedTo().insert(make_pair(handleProperly.second,clientDB.getWantToSubscribe().at(handleProperly.second)));
+            clientDB.getWantToSubscribe().erase(handleProperly.second);
+        }
+        else if(handleProperly.first == "UNSUBSCRIBE"){
+            clientDB.getSubscribedTo().erase(handleProperly.second);
+        }
+        else if(handleProperly.first == "DISCONNECT"){
+            connectionHandler_.close();
+        }
+        clientDB.getRequestWithReceipt().erase(stoi(id));
+    }
+    if(type == "MESSAGE"){
+        string type = discoverType(fromFrame.at(4));
+        if(type == "added")
+            cout << fromFrame.at(4);
+        if(type == "borrow"){
+            string bookToBorrow = stringToVector(fromFrame.at(4)).at(4);
+            string destination = splitAndGetSecondWord(fromFrame.at(3),':');
+            if (contains(clientDB.getMyBooks().at(destination),bookToBorrow)){
+                string toSend = "SEND \n "
+                                "destination:" + destination + "\n" +
+                                clientDB.getUsername() + " has " + bookToBorrow + "\n";
+                connectionHandler_.sendLine(toSend);
+                clientDB.removeFromMyBooks(bookToBorrow,destination);
+                if (clientDB.getBorrowedBooks().count(bookToBorrow) != 0)
+                    clientDB.getBorrowedBooks().erase(bookToBorrow);
+            }
+        }
+        if(type == "checkIfIWant"){
+            string owner = stringToVector(fromFrame.at(4)).at(0);
+            string book = stringToVector(fromFrame.at(4)).at(2);
+            string destination = splitAndGetSecondWord(fromFrame.at(3),':');
+            if(contains(clientDB.getWishToBorrow(),book)){
+                string toSend = "SEND \n "
+                             "destination:" + destination + "\n" +
+                              "Taking " + book + " from " + owner + "\n";
+                connectionHandler_.sendLine(toSend);
+                clientDB.addToMyBooks(destination, book);
+                clientDB.getBorrowedBooks().insert(make_pair(book,owner));
+            }
+        }
+        if(type == "status"){
+            
+        }
+    }
 
+}
+
+string protocol::splitAndGetSecondWord(string word, char delimiter) {
+    string toReturn;
+    int i = 0;
+    while (word.at(i) != delimiter){
+        i++;
+    }
+    toReturn = word.substr(i + 1,word.size() - 1);
+}
+
+string protocol::discoverType(string body){
+    string toReturn;
+    vector<string> words;
+    stringstream start(body);
+    string tempWord;
+    while (getline(start, tempWord, ' ')) {
+        words.push_back(tempWord);
+    }
+    if(words.at(2) == "added")
+        return "add";
+    if(words.at(3) == "borrow")
+        return "borrow";
+    if(words.size() == 3)
+        return "checkIfIWant";
+    if(words.at(2) == "status")
+        return "status";
+    if(words.at(0) == "Returning")
+        return "return";
+}
+
+bool protocol::contains(vector<string> &wishBooks, string &bookToBorrow) {
+    for(string &book : wishBooks)
+        if (book == bookToBorrow)
+            return true;
+    return false;
+
+}
+
+vector<string> protocol::stringToVector (string &s) {
+    vector<string> toReturn;
+    stringstream start(s);
+    string tempWord;
+    while (getline(start, tempWord, ' ')) {
+        toReturn.push_back(tempWord);
+    }
 }

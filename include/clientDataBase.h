@@ -14,11 +14,13 @@ using namespace std;
 class clientDataBase {
 private:
     string username;
-    unordered_map<string, vector<string>> myBooks;
-    unordered_map<string, string> borrowedBooks;
-    unordered_map<int,pair<string,string>> requestWithReceipt;
+    unordered_map<string, vector<string>> myBooks;// <topic,books>
+    unordered_map<string, string> borrowedBooks; //<book,owner>
+    vector<string> wishToBorrow;
+    unordered_map<int,pair<string,string>> requestWithReceipt;//<receipt id,<type,genre>>
     int receiptCount = 1;
-    unordered_map<int,string> subscribedTo;
+    unordered_map<string,int> subscribedTo;//<subId,genre>
+    unordered_map<string,int> wantToSubscribe;
     int subCount = 1;
 public:
     void increaseReceipt();
@@ -31,11 +33,13 @@ public:
 
     unordered_map<string, string> &getBorrowedBooks();
 
+     vector<string> &getWishToBorrow();
+
     unordered_map<int, pair<string,string>> &getRequestWithReceipt();
 
     int getReceiptCount() const;
 
-    const unordered_map<int, string> &getSubscribedTo() const;
+     unordered_map<string, int> &getSubscribedTo() ;
 
     int getSubCount() const;
 
@@ -44,6 +48,8 @@ public:
     void addToMyBooks (string, string);
 
     void removeFromMyBooks(string, string);
+
+     unordered_map<string,int> &getWantToSubscribe() ;
 
 };
 

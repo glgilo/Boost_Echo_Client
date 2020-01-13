@@ -17,7 +17,11 @@ private:
 
 public:
     void process(vector<string>);
-    void proccesServerLine(string);
+    void proccesServerLine(vector<string>);
+    string splitAndGetSecondWord (string,char);
+    string discoverType(string);
+    bool contains(vector<string>&, string&);
+    vector<string> stringToVector (string&);
 };
 
 
