@@ -17,7 +17,7 @@ void keyboardReader::readFromKeyboard() {
         while (getline(start, tempWord, ' ')) {
             toFrame.push_back(tempWord);
         }
-
+        protocol_.process(toFrame);
     }
 
 }

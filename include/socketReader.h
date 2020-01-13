@@ -5,9 +5,15 @@
 #ifndef BOOST_ECHO_CLIENT_SOCKETREADER_H
 #define BOOST_ECHO_CLIENT_SOCKETREADER_H
 
+#include <connectionHandler.h>
+#include <protocol.h>
 
 class socketReader {
-
+private:
+    ConnectionHandler connectionHandler_;
+    protocol protocol_;
+public:
+    void readFromSocket();
 };
 
 

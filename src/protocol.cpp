@@ -58,3 +58,7 @@ void protocol::process(vector<string> frameToBuild) {
     }
     connectionHandler_.sendLine(toSend);
 }
+
+void protocol::proccesServerLine(string line) {
+
+}
