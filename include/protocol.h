@@ -22,6 +22,7 @@ public:
     string discoverType(string);
     bool contains(vector<string>&, string&);
     vector<string> stringToVector (string&);
+    string myBooksByTopic(string&);
 };
 
 

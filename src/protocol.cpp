@@ -69,9 +69,11 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         if(handleProperly.first == "SUBSCRIBE"){
             clientDB.getSubscribedTo().insert(make_pair(handleProperly.second,clientDB.getWantToSubscribe().at(handleProperly.second)));
             clientDB.getWantToSubscribe().erase(handleProperly.second);
+            cout << "Joined club" + handleProperly.second;
         }
         else if(handleProperly.first == "UNSUBSCRIBE"){
             clientDB.getSubscribedTo().erase(handleProperly.second);
+            cout << "Exited club" + handleProperly.second;
         }
         else if(handleProperly.first == "DISCONNECT"){
             connectionHandler_.close();
@@ -79,12 +81,13 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         clientDB.getRequestWithReceipt().erase(stoi(id));
     }
     if(type == "MESSAGE"){
-        string type = discoverType(fromFrame.at(4));
-        if(type == "added")
+        string subType = discoverType(fromFrame.at(4));
+        if(subType == "added")
             cout << fromFrame.at(4);
-        if(type == "borrow"){
+        if(subType == "borrow"){
             string bookToBorrow = stringToVector(fromFrame.at(4)).at(4);
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
+            cout << fromFrame.at(4);
             if (contains(clientDB.getMyBooks().at(destination),bookToBorrow)){
                 string toSend = "SEND \n "
                                 "destination:" + destination + "\n" +
@@ -95,9 +98,10 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                     clientDB.getBorrowedBooks().erase(bookToBorrow);
             }
         }
-        if(type == "checkIfIWant"){
+        if(subType == "checkIfIWant"){
             string owner = stringToVector(fromFrame.at(4)).at(0);
             string book = stringToVector(fromFrame.at(4)).at(2);
+            cout << fromFrame.at(4);
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if(contains(clientDB.getWishToBorrow(),book)){
                 string toSend = "SEND \n "
@@ -108,8 +112,25 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                 clientDB.getBorrowedBooks().insert(make_pair(book,owner));
             }
         }
-        if(type == "status"){
-            
+        if(subType == "status"){
+            string destination = splitAndGetSecondWord(fromFrame.at(3),':');
+            cout << fromFrame.at(4);
+            string toSend = "SEND \n"
+                            "destination:" + destination + "\n" +
+                            clientDB.getUsername() + ":" + myBooksByTopic(destination);
+            connectionHandler_.sendLine(toSend);
+        }
+        if (subType == "returning"){
+            string name = stringToVector(fromFrame.at(4)).at(3);
+            string book = stringToVector(fromFrame.at(4)).at(1);
+            cout << fromFrame.at(4);
+            string destination = splitAndGetSecondWord(fromFrame.at(3),':');
+            if (clientDB.getUsername() == name)
+                clientDB.addToMyBooks(destination, book);
+
+        }
+        if(subType == "book"){
+            cout << fromFrame.at(4);
         }
     }
 
@@ -136,12 +157,13 @@ string protocol::discoverType(string body){
         return "add";
     if(words.at(3) == "borrow")
         return "borrow";
-    if(words.size() == 3)
+    if(words.size() == 3 && words.at(1) == "has")
         return "checkIfIWant";
     if(words.at(2) == "status")
         return "status";
     if(words.at(0) == "Returning")
         return "return";
+    return "books";
 }
 
 bool protocol::contains(vector<string> &wishBooks, string &bookToBorrow) {
@@ -159,4 +181,12 @@ vector<string> protocol::stringToVector (string &s) {
     while (getline(start, tempWord, ' ')) {
         toReturn.push_back(tempWord);
     }
+}
+
+string protocol::myBooksByTopic(string& topic){
+    string s;
+    vector<string> byTopic = clientDB.getMyBooks().at(topic);
+    for (string book : byTopic)
+        s = s + book + ",";
+    return s.substr(0,s.size() - 2);
 }
