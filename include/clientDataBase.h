@@ -6,6 +6,9 @@
 #define BOOST_ECHO_CLIENT_CLIENTDATABASE_H
 
 #include <vector>
+
+
+
 #include <string>
 #include <unordered_map>
 
@@ -23,6 +26,8 @@ private:
     unordered_map<string,int> wantToSubscribe;
     int subCount = 1;
 public:
+    clientDataBase();
+
     void increaseReceipt();
 
     void increaseSubId();

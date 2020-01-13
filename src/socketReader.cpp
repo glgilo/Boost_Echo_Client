@@ -9,18 +9,19 @@
 #include <connectionHandler.h>
 
 using namespace std;
-void socketReader::readFromSocket() {
-    while(1){
+void socketReader::operator()()  {
+    while(!protocol_->isSocketTermination()){
         string line;
-        if (connectionHandler_.getLine(line)) {
+        if (connectionHandler_->getLine(line)) {
             fromFrame.clear();
             stringstream start(line);
             string tempWord;
             while (getline(start, tempWord, '\n')) {
                 fromFrame.push_back(tempWord);
             }
-            protocol_.proccesServerLine(fromFrame);
+            protocol_->proccesServerLine(fromFrame);
         }
     }
-
 }
+
+socketReader::socketReader(ConnectionHandler *connectionHandler, protocol *protocol) : connectionHandler_(connectionHandler), protocol_(protocol) {}

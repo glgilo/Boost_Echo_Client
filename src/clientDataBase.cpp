@@ -6,6 +6,10 @@
 #include <unordered_map>
 using namespace std;
 
+clientDataBase::clientDataBase() {
+
+}
+
 const string &clientDataBase::getUsername() const {
     return username;
 }

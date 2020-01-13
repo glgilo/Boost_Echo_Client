@@ -7,6 +7,11 @@
 #include <vector>
 #include <unordered_map>
 
+
+protocol::protocol(ConnectionHandler *connectionHandler) {
+    connectionHandler_ = connectionHandler;
+}
+
 void protocol::process(vector<string> frameToBuild) {
     string command = frameToBuild.at(0);
     string toSend;
@@ -57,7 +62,7 @@ void protocol::process(vector<string> frameToBuild) {
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("DISCONNECT",nullptr)));
         clientDB.increaseReceipt();
     }
-    connectionHandler_.sendLine(toSend);
+    connectionHandler_->sendLine(toSend);
 }
 
 void protocol::proccesServerLine(vector<string> fromFrame) {
@@ -76,7 +81,8 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             cout << "Exited club" + handleProperly.second;
         }
         else if(handleProperly.first == "DISCONNECT"){
-            connectionHandler_.close();
+            socketTermination = true;
+            connectionHandler_->close();
         }
         clientDB.getRequestWithReceipt().erase(stoi(id));
     }
@@ -92,7 +98,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                 string toSend = "SEND \n "
                                 "destination:" + destination + "\n" +
                                 clientDB.getUsername() + " has " + bookToBorrow + "\n";
-                connectionHandler_.sendLine(toSend);
+                connectionHandler_->sendLine(toSend);
                 clientDB.removeFromMyBooks(bookToBorrow,destination);
                 if (clientDB.getBorrowedBooks().count(bookToBorrow) != 0)
                     clientDB.getBorrowedBooks().erase(bookToBorrow);
@@ -107,7 +113,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                 string toSend = "SEND \n "
                              "destination:" + destination + "\n" +
                               "Taking " + book + " from " + owner + "\n";
-                connectionHandler_.sendLine(toSend);
+                connectionHandler_->sendLine(toSend);
                 clientDB.addToMyBooks(destination, book);
                 clientDB.getBorrowedBooks().insert(make_pair(book,owner));
             }
@@ -118,7 +124,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string toSend = "SEND \n"
                             "destination:" + destination + "\n" +
                             clientDB.getUsername() + ":" + myBooksByTopic(destination);
-            connectionHandler_.sendLine(toSend);
+            connectionHandler_->sendLine(toSend);
         }
         if (subType == "returning"){
             string name = stringToVector(fromFrame.at(4)).at(3);
@@ -189,4 +195,8 @@ string protocol::myBooksByTopic(string& topic){
     for (string book : byTopic)
         s = s + book + ",";
     return s.substr(0,s.size() - 2);
+}
+
+bool protocol::isSocketTermination() const {
+    return socketTermination;
 }

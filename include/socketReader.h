@@ -11,11 +11,12 @@ using namespace std;
 
 class socketReader {
 private:
-    ConnectionHandler connectionHandler_;
-    protocol protocol_;
+    ConnectionHandler *connectionHandler_;
+    protocol *protocol_;
     vector<string> fromFrame;
 public:
-    void readFromSocket();
+    socketReader(ConnectionHandler *connectionHandler, protocol *protocol);
+    void operator()();
 };
 
 
