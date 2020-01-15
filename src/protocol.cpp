@@ -43,6 +43,7 @@ void protocol::process(vector<string> frameToBuild) {
         toSend = "SEND\n"
                         "destination:" + frameToBuild.at(1) + "\n" +
                         clientDB.getUsername() + " wish to borrow " + frameToBuild.at(2) + "\n";
+
     }
     else if (command == "return"){
         toSend = "SEND\n"
@@ -100,6 +101,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         if(subType == "add")
             cout << fromFrame.at(4) << endl;
         if(subType == "borrow"){
+            vector<string> check = stringToVector(fromFrame.at(4));
             string bookToBorrow = stringToVector(fromFrame.at(4)).at(4);
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             cout << fromFrame.at(4) << endl;
@@ -144,7 +146,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                 clientDB.addToMyBooks(destination, book);
 
         }
-        if(subType == "book"){
+        if(subType == "books"){
             cout << fromFrame.at(4) <<endl;
         }
     }
@@ -192,6 +194,7 @@ vector<string> protocol::stringToVector (string &s) {
     while (getline(start, tempWord, ' ')) {
         toReturn.push_back(tempWord);
     }
+    return toReturn;
 }
 
 string protocol::myBooksByTopic(string& topic){
