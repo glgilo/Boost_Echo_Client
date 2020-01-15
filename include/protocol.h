@@ -29,6 +29,7 @@ public:
     clientDataBase &getClientDb();
     string bookRemoveSpace(vector<string>);
     string bookAddSpace(string);
+    string splitAndGetFirstWord (string,char);
 
 };
 

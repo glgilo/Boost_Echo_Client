@@ -163,7 +163,14 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
 
         }
         if(subType == "books"){
-            cout << fromFrame.at(4) <<endl;
+            string owner = splitAndGetFirstWord(fromFrame.at(4), ':');
+            string booksWithComma = splitAndGetSecondWord(fromFrame.at(4), ':');
+            vector<string> books = stringToVector(booksWithComma, ',');
+            string toPrint = owner + ":";
+            for (string book : books){
+                toPrint = toPrint + bookAddSpace(book) + ",";
+            }
+            cout << toPrint.substr(0,toPrint.size() - 1);
         }
     }
 
@@ -172,6 +179,11 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
 string protocol::splitAndGetSecondWord(string word, char delimiter) {
     std::size_t pos = word.find(delimiter);
     return word.substr(pos + 1);
+}
+
+string protocol::splitAndGetFirstWord(string word, char delimiter) {
+    std::size_t pos = word.find(delimiter);
+    return word.substr(0,pos - 1);
 }
 
 string protocol::discoverType(string body){
