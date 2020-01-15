@@ -56,7 +56,7 @@ void clientDataBase::addToMyBooks (string topic, string book) {
     }
 }
 
-void clientDataBase::removeFromMyBooks(string book, string topic) {
+void clientDataBase::removeFromMyBooks(string& book, string& topic) {
     for(int i = 0;i< myBooks.at(topic).size();i++){
         if(book ==  myBooks.at(topic).at(i))
             myBooks.at(topic).erase( myBooks.at(topic).begin() +i);

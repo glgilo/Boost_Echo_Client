@@ -22,7 +22,7 @@ private:
     vector<string> wishToBorrow;
     unordered_map<int,pair<string,string>> requestWithReceipt;//<receipt id,<type,genre>>
     int receiptCount = 1;
-    unordered_map<string,int> subscribedTo;//<subId,genre>
+    unordered_map<string,int> subscribedTo;//<subId,genre>//hafuh
     unordered_map<string,int> wantToSubscribe;
     int subCount = 1;
 public:
@@ -54,7 +54,7 @@ public:
 
     void addToMyBooks (string, string);
 
-    void removeFromMyBooks(string, string);
+    void removeFromMyBooks(string&, string&);
 
      unordered_map<string,int> &getWantToSubscribe() ;
 
