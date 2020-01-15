@@ -27,6 +27,7 @@ public:
     string myBooksByTopic(string&);
     bool isSocketTermination() const;
     clientDataBase &getClientDb();
+    string bookRemoveSpace(vector<string>);
 
 };
 

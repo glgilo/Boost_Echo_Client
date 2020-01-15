@@ -36,19 +36,20 @@ void protocol::process(vector<string> frameToBuild) {
     else if (command == "add"){
         toSend = "SEND\n"
                         "destination:" + frameToBuild.at(1) + "\n" +
-                        clientDB.getUsername() + " has added the book " + frameToBuild.at(2) + "\n";
+                        clientDB.getUsername() + " has added the book " + bookRemoveSpace(frameToBuild) + "\n";
         clientDB.addToMyBooks(frameToBuild.at(1),frameToBuild.at(2));
     }
     else if (command == "borrow"){
         toSend = "SEND\n"
                         "destination:" + frameToBuild.at(1) + "\n" +
-                        clientDB.getUsername() + " wish to borrow " + frameToBuild.at(2) + "\n";
+                        clientDB.getUsername() + " wish to borrow " + bookRemoveSpace(frameToBuild) + "\n";
+        clientDB.getWishToBorrow().push_back(frameToBuild.at(2));
 
     }
     else if (command == "return"){
         toSend = "SEND\n"
                         "destination:" + frameToBuild.at(1) + "\n" +
-                        "returning " + frameToBuild.at(2) + " to" + clientDB.getBorrowedBooks().at(frameToBuild.at(2)) + "\n";
+                        "returning " + bookRemoveSpace(frameToBuild) + " to" + clientDB.getBorrowedBooks().at(frameToBuild.at(2)) + "\n";
         clientDB.removeFromMyBooks(frameToBuild.at(1), frameToBuild.at(2));
         clientDB.getBorrowedBooks().erase(frameToBuild.at(2));
     }
@@ -213,5 +214,11 @@ clientDataBase &protocol::getClientDb() {
     return clientDB;
 }
 
-//TODO: PUSH----------------------------------------------------------------
+string protocol::bookRemoveSpace(vector<string> toRepair){
+    string repaired;
+    for(int i = 2; i<toRepair.size();i++){
+        repaired = repaired + toRepair.at(i) + '-';
+    }
+    return repaired.substr(0,repaired.size()-2);
+}
 
