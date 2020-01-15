@@ -99,13 +99,22 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
     }
     else if(type == "MESSAGE"){
         string subType = discoverType(fromFrame.at(4));
-        if(subType == "add")
-            cout << fromFrame.at(4) << endl;
+        if(subType == "add") {
+            vector <string> frame = stringToVector(fromFrame.at(4), ' ');
+            string book = bookAddSpace(frame.at(5));
+            for (int i = 0; i < frame.size()-1; i++)
+                cout << frame.at(i) + " ";
+            cout << book << endl;
+        }
         if(subType == "borrow"){
             vector<string> check = stringToVector(fromFrame.at(4), ' ');
             string bookToBorrow = stringToVector(fromFrame.at(4),' ').at(4);
+            vector <string> frame = stringToVector(fromFrame.at(4), ' ');
+            string book = bookAddSpace(frame.at(4));
+            for (int i = 0; i < frame.size()-1; i++)
+                cout << frame.at(i) + " ";
+            cout << book << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
-            cout << fromFrame.at(4) << endl;
             if (contains(clientDB.getMyBooks().at(destination),bookToBorrow)){
                 string toSend = "SEND\n"
                                 "destination:" + destination + "\n" +
@@ -117,9 +126,13 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             }
         }
         if(subType == "checkIfIWant"){
+            vector <string> frame = stringToVector(fromFrame.at(4), ' ');
             string owner = stringToVector(fromFrame.at(4), ' ').at(0);
             string book = stringToVector(fromFrame.at(4), ' ').at(2);
-            cout << fromFrame.at(4) << endl;
+            string bookRepaired = bookAddSpace(book);
+            for (int i = 0; i < frame.size()-1; i++)
+                cout << frame.at(i) + " ";
+            cout << bookRepaired << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if(contains(clientDB.getWishToBorrow(),book)){
                 string toSend = "SEND\n"
@@ -139,9 +152,11 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             connectionHandler_->sendLine(toSend);
         }
         if (subType == "returning"){
-            string name = stringToVector(fromFrame.at(4),' ').at(3);
+            vector <string> frame = stringToVector(fromFrame.at(4), ' ');
+            string name = stringToVector(fromFrame.at(4), ' ').at(3);
             string book = stringToVector(fromFrame.at(4), ' ').at(1);
-            cout << fromFrame.at(4) << endl;
+            string bookRepaired = bookAddSpace(book);
+            cout << "Returning " + bookRepaired + " to " + name;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if (clientDB.getUsername() == name)
                 clientDB.addToMyBooks(destination, book);
@@ -155,7 +170,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
 }
 
 string protocol::splitAndGetSecondWord(string word, char delimiter) {
-    std::size_t pos = word.find(":");
+    std::size_t pos = word.find(delimiter);
     return word.substr(pos + 1);
 }
 
@@ -188,11 +203,11 @@ bool protocol::contains(vector<string> &wishBooks, string &bookToBorrow) {
 
 }
 
-vector<string> protocol::stringToVector (string &s) {
+vector<string> protocol::stringToVector (string &s, char delimiter) {
     vector<string> toReturn;
     stringstream start(s);
     string tempWord;
-    while (getline(start, tempWord, ' ')) {
+    while (getline(start, tempWord, delimiter)) {
         toReturn.push_back(tempWord);
     }
     return toReturn;
@@ -219,6 +234,17 @@ string protocol::bookRemoveSpace(vector<string> toRepair){
     for(int i = 2; i<toRepair.size();i++){
         repaired = repaired + toRepair.at(i) + '-';
     }
-    return repaired.substr(0,repaired.size()-2);
+    return repaired.substr(0,repaired.size()-1);
+}
+
+string protocol::bookAddSpace(string toRepair){
+    string repaired;
+    for (char c : toRepair) {
+        if (c == '-')
+            repaired = repaired + " ";
+        else
+            repaired = repaired + c;
+    }
+    return repaired;
 }
 

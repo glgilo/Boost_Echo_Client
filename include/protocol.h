@@ -23,11 +23,12 @@ public:
     string splitAndGetSecondWord (string,char);
     string discoverType(string);
     bool contains(vector<string>&, string&);
-    vector<string> stringToVector (string&);
+    vector<string> stringToVector (string&, char);
     string myBooksByTopic(string&);
     bool isSocketTermination() const;
     clientDataBase &getClientDb();
     string bookRemoveSpace(vector<string>);
+    string bookAddSpace(string);
 
 };
 
