@@ -200,7 +200,7 @@ string protocol::discoverType(string body){
         return "borrow";
     if(words.size() == 3 && words.at(1) == "has")
         return "checkIfIWant";
-    if(words.size() > 2 && words.at(2) == "status")
+    if(words.size() > 1 && words.at(1) == "status")
         return "status";
     if(words.size() > 0 && words.at(0) == "Returning")
         return "return";
@@ -230,7 +230,7 @@ string protocol::myBooksByTopic(string& topic){
     vector<string> byTopic = clientDB.getMyBooks().at(topic);
     for (string book : byTopic)
         s = s + book + ",";
-    return s.substr(0,s.size() - 2);
+    return s.substr(0,s.size() - 1); //todo: check size -1
 }
 
 bool protocol::isSocketTermination() const {
