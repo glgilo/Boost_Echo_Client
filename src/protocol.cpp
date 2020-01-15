@@ -102,8 +102,8 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         if(subType == "add")
             cout << fromFrame.at(4) << endl;
         if(subType == "borrow"){
-            vector<string> check = stringToVector(fromFrame.at(4));
-            string bookToBorrow = stringToVector(fromFrame.at(4)).at(4);
+            vector<string> check = stringToVector(fromFrame.at(4), ' ');
+            string bookToBorrow = stringToVector(fromFrame.at(4),' ').at(4);
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             cout << fromFrame.at(4) << endl;
             if (contains(clientDB.getMyBooks().at(destination),bookToBorrow)){
@@ -117,8 +117,8 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             }
         }
         if(subType == "checkIfIWant"){
-            string owner = stringToVector(fromFrame.at(4)).at(0);
-            string book = stringToVector(fromFrame.at(4)).at(2);
+            string owner = stringToVector(fromFrame.at(4), ' ').at(0);
+            string book = stringToVector(fromFrame.at(4), ' ').at(2);
             cout << fromFrame.at(4) << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if(contains(clientDB.getWishToBorrow(),book)){
@@ -139,8 +139,8 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             connectionHandler_->sendLine(toSend);
         }
         if (subType == "returning"){
-            string name = stringToVector(fromFrame.at(4)).at(3);
-            string book = stringToVector(fromFrame.at(4)).at(1);
+            string name = stringToVector(fromFrame.at(4),' ').at(3);
+            string book = stringToVector(fromFrame.at(4), ' ').at(1);
             cout << fromFrame.at(4) << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if (clientDB.getUsername() == name)
