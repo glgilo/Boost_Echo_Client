@@ -14,10 +14,12 @@ using namespace std;
 class keyboardReader {
 private:
     vector<string> toFrame;
-    protocol protocol_;
+    protocol* protocol_;
 
 public:
-    void readFromKeyboard();
+    keyboardReader(protocol*);
+
+    void operator()();
 };
 
 

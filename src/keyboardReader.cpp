@@ -7,17 +7,25 @@
 #include "keyboardReader.h"
 using namespace std;
 
-void keyboardReader::readFromKeyboard() {
+keyboardReader::keyboardReader(protocol *Protocol) {
+    protocol_= Protocol;
+}
+
+ void keyboardReader::operator()(){
     string line;
     while(1) {
-        cin >> line;
+        const short bufsize = 1024;
+        char buf[bufsize];
+        cout << "before cin" << endl;
+        std::cin.getline(buf, bufsize);
+        std::string line(buf);
         toFrame.clear();
         stringstream start(line);
         string tempWord;
         while (getline(start, tempWord, ' ')) {
             toFrame.push_back(tempWord);
         }
-
+        protocol_->process(toFrame);
     }
 
 }
