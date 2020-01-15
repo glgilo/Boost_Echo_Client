@@ -71,3 +71,7 @@ void clientDataBase::removeFromMyBooks(string book, string topic) {
  vector<string> &clientDataBase::getWishToBorrow()  {
     return wishToBorrow;
 }
+
+void clientDataBase::setUsername(const string &username) {
+    clientDataBase::username = username;
+}

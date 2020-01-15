@@ -26,6 +26,8 @@ public:
     vector<string> stringToVector (string&);
     string myBooksByTopic(string&);
     bool isSocketTermination() const;
+    clientDataBase &getClientDb();
+
 };
 
 

@@ -50,6 +50,8 @@ public:
 
     const string &getUsername() const;
 
+    void setUsername(const string &username);
+
     void addToMyBooks (string, string);
 
     void removeFromMyBooks(string, string);

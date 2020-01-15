@@ -33,9 +33,19 @@ int main() {
     }
     while(temp.at(0) != "login");
 
-    ConnectionHandler connectionHandler(temp.at(1),7777);
+    string toSend = "CONNECT\n"
+                    "accept-version:1.2\n"
+                    "host:stomp.cs.bgu.ac.il\n"
+                    "login:" + temp.at(2) + "\n"
+                    "passcode:" + temp.at(3) + "\n";
+    int delimiter = temp.at(1).find(':')+1;
+    short port = (short)stoi(temp.at(1).substr(delimiter));
+    string host = temp.at(1).substr(0,delimiter-1);
+    ConnectionHandler connectionHandler(host,port);
     protocol aProtocol(&connectionHandler);
+    aProtocol.getClientDb().setUsername(temp.at(2));
     connectionHandler.connect();
+    connectionHandler.sendLine(toSend);
 
     keyboardReader keyboardReader(&aProtocol);
     socketReader socketReader (&connectionHandler, &aProtocol);

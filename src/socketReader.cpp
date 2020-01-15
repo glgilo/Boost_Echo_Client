@@ -17,7 +17,8 @@ void socketReader::operator()()  {
             stringstream start(line);
             string tempWord;
             while (getline(start, tempWord, '\n')) {
-                fromFrame.push_back(tempWord);
+                if (!tempWord.empty())
+                    fromFrame.push_back(tempWord);
             }
             protocol_->proccesServerLine(fromFrame);
         }
