@@ -166,15 +166,15 @@ string protocol::discoverType(string body){
     while (getline(start, tempWord, ' ')) {
         words.push_back(tempWord);
     }
-    if(words.at(2) == "added")
+    if(words.size() > 2 && words.at(2) == "added")
         return "add";
-    if(words.at(3) == "borrow")
+    if(words.size() > 3 && words.at(3) == "borrow")
         return "borrow";
     if(words.size() == 3 && words.at(1) == "has")
         return "checkIfIWant";
-    if(words.at(2) == "status")
+    if(words.size() > 2 && words.at(2) == "status")
         return "status";
-    if(words.at(0) == "Returning")
+    if(words.size() > 0 && words.at(0) == "Returning")
         return "return";
     return "books";
 }
