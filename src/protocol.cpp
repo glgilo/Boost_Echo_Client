@@ -173,7 +173,6 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             cout << toPrint.substr(0,toPrint.size() - 1);
         }
     }
-
 }
 
 string protocol::splitAndGetSecondWord(string word, char delimiter) {
