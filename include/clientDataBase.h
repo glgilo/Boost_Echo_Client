@@ -58,6 +58,8 @@ public:
 
      unordered_map<string,int> &getWantToSubscribe() ;
 
+     void removeFromWishToBorrow(string&);
+
 };
 
 

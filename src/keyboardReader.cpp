@@ -19,6 +19,7 @@ keyboardReader::keyboardReader(protocol *Protocol) {
         cout << "before cin" << endl;
         std::cin.getline(buf, bufsize);
         std::string line(buf);
+
         toFrame.clear();
         stringstream start(line);
         string tempWord;
@@ -26,6 +27,9 @@ keyboardReader::keyboardReader(protocol *Protocol) {
             toFrame.push_back(tempWord);
         }
         protocol_->process(toFrame);
+        if(line == "logout"){
+            break;
+        }
     }
 
 }

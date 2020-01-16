@@ -75,3 +75,10 @@ void clientDataBase::removeFromMyBooks(string& book, string& topic) {
 void clientDataBase::setUsername(const string &username) {
     clientDataBase::username = username;
 }
+ void clientDataBase::removeFromWishToBorrow(string &book) {
+    for(int i = 0 ; i<wishToBorrow.size();i++){
+        if(wishToBorrow.at(i) == book)
+          wishToBorrow.erase(wishToBorrow.begin() +i);
+    }
+
+}
