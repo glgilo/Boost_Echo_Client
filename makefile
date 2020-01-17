@@ -1,17 +1,33 @@
 CFLAGS:=-c -Wall -Weffc++ -g -std=c++11 -Iinclude
 LDFLAGS:=-lboost_system
 
-all: EchoClient
-	g++ -o bin/echoExample bin/connectionHandler.o bin/echoClient.o $(LDFLAGS) 
+all: StompClient
+	g++ -o bin/echoExample bin/connectionHandler.o bin/echoClient.o bin/clientDataBase.o bin/keyboardReader.o bin/protocol.o bin/socketReader.o bin/stompBookClubClient.o $(LDFLAGS)
 
-EchoClient: bin/connectionHandler.o bin/echoClient.o
+StompClient: bin/connectionHandler.o bin/echoClient.o bin/clientDataBase.o bin/keyboardReader.o bin/protocol.o bin/socketReader.o bin/stompBookClubClient.o
 	
 bin/connectionHandler.o: src/connectionHandler.cpp
 	g++ $(CFLAGS) -o bin/connectionHandler.o src/connectionHandler.cpp
 
 bin/echoClient.o: src/echoClient.cpp
 	g++ $(CFLAGS) -o bin/echoClient.o src/echoClient.cpp
-	
+
+bin/clientDataBase.o: src/clientDataBase.cpp
+    g++ $(CFLAGS) -o bin/clientDataBase.o src/clientDataBase.cpp
+
+bin/keyboardReader.o: src/keyboardReader.cpp
+    g++ $(CFLAGS) -o bin/keyboardReader.o src/keyboardReader.cpp
+
+bin/protocol.o: src/protocol.cpp
+    g++ $(CFLAGS) -o bin/protocol.o src/protocol.cpp
+
+bin/socketReader.o: src/socketReader.cpp
+    g++ $(CFLAGS) -o bin/socketReader.o src/socketReader.cpp
+
+bin/stompBookClubClient.o: src/stompBookClubClient.cpp
+    g++ $(CFLAGS) -o bin/stompBookClubClient.o src/stompBookClubClient.cpp
+
+
 .PHONY: clean
 clean:
 	rm -f bin/*
