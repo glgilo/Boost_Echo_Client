@@ -26,7 +26,6 @@ add_executable(Boost_Echo_Client
         include/socketReader.h
         src/socketReader.cpp
         src/connectionHandler.cpp
-        src/echoClient.cpp
         src/stompBookClubClient.cpp
         src/keyboardReader.cpp
         src/protocol.cpp
