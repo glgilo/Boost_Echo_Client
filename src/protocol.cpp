@@ -116,7 +116,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         if(subType == "add") {
             vector <string> frame = stringToVector(fromFrame.at(4), ' ');
             string book = bookAddSpace(frame.at(5));
-            for (int i = 0; i < frame.size()-1; i++)
+            for (int i = 0;(unsigned) i < frame.size()-1; i++)
                 cout << frame.at(i) + " ";
             cout << book << endl;
         }
@@ -125,7 +125,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string bookToBorrow = stringToVector(fromFrame.at(4),' ').at(4);
             vector <string> frame = stringToVector(fromFrame.at(4), ' ');
             string book = bookAddSpace(frame.at(4));
-            for (int i = 0; i < frame.size()-1; i++)
+            for (int i = 0;(unsigned) i < frame.size()-1; i++)
                 cout << frame.at(i) + " ";
             cout << book << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
@@ -144,7 +144,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string owner = stringToVector(fromFrame.at(4), ' ').at(0);
             string book = stringToVector(fromFrame.at(4), ' ').at(2);
             string bookRepaired = bookAddSpace(book);
-            for (int i = 0; i < frame.size()-1; i++)
+            for (int i = 0;(unsigned) i < frame.size()-1; i++)
                 cout << frame.at(i) + " ";
             cout << bookRepaired << endl;
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
@@ -277,7 +277,7 @@ clientDataBase &protocol::getClientDb() {
 
 string protocol::bookRemoveSpace(vector<string> toRepair){
     string repaired;
-    for(int i = 2; i<toRepair.size();i++){
+    for(int i = 2;(unsigned) i<toRepair.size();i++){
         repaired = repaired + toRepair.at(i) + '-';
     }
     return repaired.substr(0,repaired.size()-1);

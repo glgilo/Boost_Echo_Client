@@ -7,7 +7,6 @@
 using namespace std;
 
 clientDataBase::clientDataBase() {
-
 }
 
 const string &clientDataBase::getUsername() const {
@@ -57,7 +56,7 @@ void clientDataBase::addToMyBooks (string topic, string book) {
 }
 
 void clientDataBase::removeFromMyBooks(string& book, string& topic) {
-    for(int i = 0;i< myBooks.at(topic).size();i++){
+    for(int i = 0;(unsigned) i < myBooks.at(topic).size();i++){
         if(book ==  myBooks.at(topic).at(i))
             myBooks.at(topic).erase( myBooks.at(topic).begin() +i);
     }
@@ -76,7 +75,7 @@ void clientDataBase::setUsername(const string &username) {
     clientDataBase::username = username;
 }
  void clientDataBase::removeFromWishToBorrow(string &book) {
-    for(int i = 0 ; i<wishToBorrow.size();i++){
+    for(int i = 0 ;(unsigned) i<wishToBorrow.size();i++){
         if(wishToBorrow.at(i) == book)
           wishToBorrow.erase(wishToBorrow.begin() +i);
     }
