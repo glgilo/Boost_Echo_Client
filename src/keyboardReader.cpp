@@ -17,7 +17,6 @@ keyboardReader::keyboardReader(protocol *Protocol): toFrame(), protocol_(){
     while(1) {
         const short bufsize = 1024;
         char buf[bufsize];
-        cout << "before cin" << endl;
         std::cin.getline(buf, bufsize);
         std::string line(buf);
 

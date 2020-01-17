@@ -66,12 +66,10 @@ void protocol::process(vector<string> frameToBuild) {
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("DISCONNECT","")));
         clientDB.increaseReceipt();
     }
-    cout << toSend << endl; //////////////////////////////delete later
     connectionHandler_->sendLine(toSend);
 }
 
 void protocol::proccesServerLine(vector<string> fromFrame) {
-    cout << "reading line from socket" <<endl; ///////////////////////////delete later
     string type = fromFrame.at(0);
     if(type == "CONNECTED") {
         cout << "Login successful" << endl;
@@ -95,16 +93,6 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             cout << "Exited club " + handleProperly.second << endl;
         }
         else if(handleProperly.first == "DISCONNECT"){
-            //////Amit added this//////
-//            for (pair<string,int> topic : clientDB.getSubscribedTo()){
-//                string toSend = "UNSUBSCRIBE\n"
-//                         "id:" + to_string(topic.second) + "\n"
-//                                                           "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
-//                clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("UNSUBSCRIBE",topic.first)));
-//                clientDB.increaseReceipt();
-//                connectionHandler_->sendLine(toSend);
-//            }
-            /////////////////////////
             socketTermination = true;
             connectionHandler_->close();
             cout << clientDB.getUsername() + " has logged out successfully" << endl;
@@ -134,9 +122,6 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                                 "destination:" + destination + "\n\n" +
                                 clientDB.getUsername() + " has " + bookToBorrow + "\n";
                 connectionHandler_->sendLine(toSend);
-//                clientDB.removeFromMyBooks(bookToBorrow,destination);
-//                if (clientDB.getBorrowedBooks().count(bookToBorrow) != 0)
-//                    clientDB.getBorrowedBooks().erase(bookToBorrow);
             }
         }
         if(subType == "checkIfIWant"){
@@ -162,7 +147,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
         if(subType == "status"){
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             cout << fromFrame.at(4) << endl;
-            if(clientDB.getMyBooks().count(destination) != 0 && !clientDB.getMyBooks().at(destination).empty()) {//////////////////////TODO:igal added
+            if(clientDB.getMyBooks().count(destination) != 0 && !clientDB.getMyBooks().at(destination).empty()) {
                 string check = myBooksByTopic(destination);
                 string toSend = "SEND\n"
                                 "destination:" + destination + "\n\n" +
@@ -198,8 +183,6 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string owner = body.at(3);
             if(clientDB.getUsername() == owner) {
                 clientDB.removeFromMyBooks(body.at(1), destination);
-//                if (clientDB.getBorrowedBooks().count(bookName) != 0)
-//                    clientDB.getBorrowedBooks().erase(bookName);
             }
             cout << body.at(0) + " " + bookName + " " + body.at(2) + " " + body.at(3) << endl;
         }
@@ -237,7 +220,6 @@ string protocol::discoverType(string body){
     //////Amit added this////////
     if(!words.empty() && words.at(0) == "Taking")
         return "Taking";
-    ////////////////////////////
     return "books";
 }
 

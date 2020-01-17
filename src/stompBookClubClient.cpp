@@ -58,6 +58,5 @@ int main() {
 
         keyboardThread.join();
         socketThread.join();
-        cout<< "code is dead" <<endl;
     }
 //}
