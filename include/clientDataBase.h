@@ -26,6 +26,9 @@ private:
     unordered_map<string,int> wantToSubscribe;
     int subCount = 1;
 public:
+    ~clientDataBase()= default;
+    clientDataBase(const clientDataBase&)= default;
+    clientDataBase &operator=(const clientDataBase&)= default;
     clientDataBase();
 
     void increaseReceipt();

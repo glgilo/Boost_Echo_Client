@@ -6,7 +6,9 @@
 #include <unordered_map>
 using namespace std;
 
-clientDataBase::clientDataBase() {
+clientDataBase::clientDataBase():
+username(""), myBooks(), borrowedBooks(), wishToBorrow(),requestWithReceipt(), subscribedTo(), wantToSubscribe() {
+
 }
 
 const string &clientDataBase::getUsername() const {

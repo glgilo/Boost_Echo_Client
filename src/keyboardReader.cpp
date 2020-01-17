@@ -4,10 +4,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <protocol.h>
 #include "keyboardReader.h"
 using namespace std;
 
-keyboardReader::keyboardReader(protocol *Protocol) {
+keyboardReader::keyboardReader(protocol *Protocol): toFrame(), protocol_(){
     protocol_= Protocol;
 }
 

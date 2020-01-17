@@ -15,6 +15,9 @@ private:
     protocol *protocol_;
     vector<string> fromFrame;
 public:
+    ~socketReader()= default;
+    socketReader(const socketReader&)= default;
+    socketReader &operator=(const socketReader&)= default;
     socketReader(ConnectionHandler *connectionHandler, protocol *protocol);
     void operator()();
 };

@@ -9,6 +9,9 @@
 #include <connectionHandler.h>
 
 using namespace std;
+
+socketReader::socketReader(ConnectionHandler *connectionHandler, protocol *protocol) : connectionHandler_(connectionHandler), protocol_(protocol), fromFrame() {}
+
 void socketReader::operator()()  {
     while(!protocol_->isSocketTermination()){
         string line;
@@ -24,5 +27,3 @@ void socketReader::operator()()  {
         }
     }
 }
-
-socketReader::socketReader(ConnectionHandler *connectionHandler, protocol *protocol) : connectionHandler_(connectionHandler), protocol_(protocol) {}

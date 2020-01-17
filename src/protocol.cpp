@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 
-protocol::protocol(ConnectionHandler *connectionHandler) {
+protocol::protocol(ConnectionHandler *connectionHandler): connectionHandler_(), clientDB() {
     connectionHandler_ = connectionHandler;
 }
 

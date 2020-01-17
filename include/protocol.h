@@ -17,6 +17,9 @@ private:
     bool socketTermination = false;
 
 public:
+    ~protocol()= default;
+    protocol(const protocol&)= default;
+    protocol &operator=(const protocol&)= default;
     protocol(ConnectionHandler*);
     void process(vector<string>);
     void proccesServerLine(vector<string>);

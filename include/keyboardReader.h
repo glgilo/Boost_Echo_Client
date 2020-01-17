@@ -5,9 +5,7 @@
 #ifndef BOOST_ECHO_CLIENT_KEYBOARDREADER_H
 #define BOOST_ECHO_CLIENT_KEYBOARDREADER_H
 
-#include <string>
-#include <vector>
-#include "protocol.h"
+
 
 using namespace std;
 
@@ -17,6 +15,9 @@ private:
     protocol* protocol_;
 
 public:
+    ~keyboardReader()= default;
+    keyboardReader(const keyboardReader&)= default;
+    keyboardReader &operator=(const keyboardReader&)= default;
     keyboardReader(protocol*);
 
     void operator()();
