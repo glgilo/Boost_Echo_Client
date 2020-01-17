@@ -36,28 +36,28 @@ void protocol::process(vector<string> frameToBuild) {
     else if (command == "add"){
         string book = bookRemoveSpace(frameToBuild);
         toSend = "SEND\n"
-                        "destination:" + frameToBuild.at(1) + "\n" +
+                        "destination:" + frameToBuild.at(1) + "\n\n" +
                         clientDB.getUsername() + " has added the book " + book + "\n";
         clientDB.addToMyBooks(frameToBuild.at(1),book);
     }
     else if (command == "borrow"){
         string book = bookRemoveSpace(frameToBuild);
         toSend = "SEND\n"
-                        "destination:" + frameToBuild.at(1) + "\n" +
+                        "destination:" + frameToBuild.at(1) + "\n\n" +
                         clientDB.getUsername() + " wish to borrow " + book + "\n";
         clientDB.getWishToBorrow().push_back(book);
 
     }
     else if (command == "return"){
         toSend = "SEND\n"
-                        "destination:" + frameToBuild.at(1) + "\n" +
+                        "destination:" + frameToBuild.at(1) + "\n\n" +
                         "Returning " + bookRemoveSpace(frameToBuild) + " to " + clientDB.getBorrowedBooks().at(frameToBuild.at(2)) + "\n";
         clientDB.removeFromMyBooks(frameToBuild.at(2), frameToBuild.at(1));
         clientDB.getBorrowedBooks().erase(frameToBuild.at(2));
     }
     else if (command == "status"){
         toSend = "SEND\n"
-                 "destination:" + frameToBuild.at(1) + "\n" +
+                 "destination:" + frameToBuild.at(1) + "\n\n" +
                  "Book status\n";
     }
     else if (command == "logout") {
@@ -131,7 +131,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if (clientDB.getMyBooks().count(destination) > 0 && contains(clientDB.getMyBooks().at(destination),bookToBorrow)){
                 string toSend = "SEND\n"
-                                "destination:" + destination + "\n" +
+                                "destination:" + destination + "\n\n" +
                                 clientDB.getUsername() + " has " + bookToBorrow + "\n";
                 connectionHandler_->sendLine(toSend);
 //                clientDB.removeFromMyBooks(bookToBorrow,destination);
@@ -150,7 +150,7 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             string destination = splitAndGetSecondWord(fromFrame.at(3),':');
             if(contains(clientDB.getWishToBorrow(),book)){
                 string toSend = "SEND\n"
-                             "destination:" + destination + "\n" +
+                             "destination:" + destination + "\n\n" +
                               "Taking " + book + " from " + owner + "\n";
                 connectionHandler_->sendLine(toSend);
                 clientDB.addToMyBooks(destination, book);
@@ -165,8 +165,8 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
             if(clientDB.getMyBooks().count(destination) != 0 && !clientDB.getMyBooks().at(destination).empty()) {//////////////////////TODO:igal added
                 string check = myBooksByTopic(destination);
                 string toSend = "SEND\n"
-                                "destination:" + destination + "\n" +
-                                clientDB.getUsername() + ":" + myBooksByTopic(destination);
+                                "destination:" + destination + "\n\n" +
+                                clientDB.getUsername() + ":" + myBooksByTopic(destination)+ "\n";
                 connectionHandler_->sendLine(toSend);
             }
         }
