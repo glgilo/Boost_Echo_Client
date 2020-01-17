@@ -7,7 +7,7 @@ StompClient: bin/connectionHandler.o bin/clientDataBase.o bin/keyboardReader.o b
 	@echo 'Building target: Stomp Client'
 	@echo 'Invoking: c++ Linker'
 
-	g++ -pthread -o bin/connectionHandler.o bin/clientDataBase.o bin/keyboardReader.o bin/protocol.o bin/socketReader.o bin/stompBookClubClient.o $(LDFLAGS)
+	g++ -pthread -o bin/stompBookClubClient.o bin/clientDataBase.o bin/keyboardReader.o bin/protocol.o bin/socketReader.o bin/connectionHandler.o $(LDFLAGS)
 
 	@echo 'Finished building target: Stomp Client'
 	@echo ' '
