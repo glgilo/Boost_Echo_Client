@@ -19,7 +19,7 @@ void protocol::process(vector<string> frameToBuild) {
         toSend = "SUBSCRIBE\n"
                         "destination:" + frameToBuild.at(1) + "\n"
                         "id:" + to_string(clientDB.getSubCount()) + "\n"
-                        "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
+                        "receipt:" + to_string(clientDB.getReceiptCount()) + "\n\n";
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("SUBSCRIBE",frameToBuild.at(1))));
         clientDB.getWantToSubscribe().insert(make_pair(frameToBuild.at(1),clientDB.getSubCount()));
         clientDB.increaseSubId();
@@ -29,7 +29,7 @@ void protocol::process(vector<string> frameToBuild) {
     else if(command == "exit"){
         toSend = "UNSUBSCRIBE\n"
                         "id:" + to_string(clientDB.getSubscribedTo().at(frameToBuild.at(1))) + "\n"
-                        "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
+                        "receipt:" + to_string(clientDB.getReceiptCount()) + "\n\n";
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("UNSUBSCRIBE",frameToBuild.at(1))));
         clientDB.increaseReceipt();
 }
@@ -49,11 +49,12 @@ void protocol::process(vector<string> frameToBuild) {
 
     }
     else if (command == "return"){
+        string book = bookRemoveSpace(frameToBuild);
         toSend = "SEND\n"
                         "destination:" + frameToBuild.at(1) + "\n\n" +
-                        "Returning " + bookRemoveSpace(frameToBuild) + " to " + clientDB.getBorrowedBooks().at(frameToBuild.at(2)) + "\n";
-        clientDB.removeFromMyBooks(frameToBuild.at(2), frameToBuild.at(1));
-        clientDB.getBorrowedBooks().erase(frameToBuild.at(2));
+                        "Returning " + book + " to " + clientDB.getBorrowedBooks().at(book) + "\n";
+        clientDB.removeFromMyBooks(book, frameToBuild.at(1));
+        clientDB.getBorrowedBooks().erase(book);
     }
     else if (command == "status"){
         toSend = "SEND\n"
@@ -62,7 +63,7 @@ void protocol::process(vector<string> frameToBuild) {
     }
     else if (command == "logout") {
         toSend = "DISCONNECT\n"
-                 "receipt:" + to_string(clientDB.getReceiptCount()) + "\n";
+                 "receipt:" + to_string(clientDB.getReceiptCount()) + "\n\n";
         clientDB.getRequestWithReceipt().insert(make_pair(clientDB.getReceiptCount(),make_pair("DISCONNECT","")));
         clientDB.increaseReceipt();
     }
@@ -141,7 +142,6 @@ void protocol::proccesServerLine(vector<string> fromFrame) {
                 clientDB.addToMyBooks(destination, book);
                 clientDB.removeFromWishToBorrow(book);
                 clientDB.getBorrowedBooks().insert(make_pair(book,owner));
-                cout << "Taking " + book + " from " + owner << endl;
             }
         }
         if(subType == "status"){

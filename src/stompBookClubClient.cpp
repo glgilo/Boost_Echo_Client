@@ -40,7 +40,7 @@ int main() {
                         "accept-version:1.2\n"
                         "host:stomp.cs.bgu.ac.il\n"
                         "login:" + temp.at(2) + "\n"
-                                                "passcode:" + temp.at(3) + "\n";
+                                                "passcode:" + temp.at(3) + "\n\n";
         int delimiter = temp.at(1).find(':') + 1;
         short port = (short) stoi(temp.at(1).substr(delimiter));
         string host = temp.at(1).substr(0, delimiter - 1);
